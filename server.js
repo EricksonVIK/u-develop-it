@@ -18,11 +18,13 @@ const db = mysql.createConnection(
     // Your MySQL username,
     user: 'root',
     // Your MySQL password
+    // ran ALTER USER root@localhost IDENTIFIED BY ''; to ammend password to empty
     password: '',
     database: 'election'
   },
   console.log('Connected to the election database.')
 );
+
 
 // test express
 app.get('/', (req, res) => {
@@ -31,8 +33,35 @@ app.get('/', (req, res) => {
     });
   });
 
-  db.query(`SELECT * FROM candidates`, (err, rows) => {
-    console.log(rows);
+  // query test to verify mysql connection -- creates array of objects
+  // each row is an individual object
+  // changed to query a single candidate
+  db.query(`SELECT * FROM candidates WHERE id = 1`, (err, row) => {
+    // console.log(rows);
+    if (err) {
+      console.log(err);
+    }
+    console.log(row);
+  });
+
+  // query to create a candidate
+  const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected) 
+              VALUES (?,?,?,?)`;
+const params = [1, 'Ronald', 'Firbank', 1];
+
+db.query(sql, params, (err, result) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(result);
+});
+
+  // query to delet a candidate
+  db.query(`DELETE FROM candidates WHERE id = ?`, 1, (err, result) => {
+    if (err) {
+      console.log (err);
+    }
+    console.log(result);
   });
 
 // Default response for any other request (Not Found)
