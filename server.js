@@ -26,12 +26,21 @@ const db = mysql.createConnection(
 );
 
 
-// test express
-app.get('/', (req, res) => {
+// Get all candidates
+app.get('/api/candidates', (req, res) => {
+  const sql = `SELECT * FROM candidates`;
+
+  db.query(sql, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
     res.json({
-      message: 'Hello World'
+      message: 'success',
+      data: rows
     });
   });
+});
 
   // query test to verify mysql connection -- creates array of objects
   // each row is an individual object
